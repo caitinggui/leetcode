@@ -39,7 +39,7 @@ class BinaryTree(object):
             self.preorder(node.right)
 
     def preorder_stack(self):
-        
+        pass
 
     def inorder(self, node):
         if node is None:
@@ -59,3 +59,21 @@ class BinaryTree(object):
 
     def show(self):
         self.preorder(self.root)
+
+    def bfs(self, node):
+        tree_stack = []
+        tree_stack.append(node)
+        while len(tree_stack) > 0:
+            node_next = tree_stack.pop(0)
+            print node_next.data
+            if node_next.left:
+                tree_stack.append(node_next.left)
+            if node_next.right:
+                tree_stack.append(node_next.right)
+
+
+if __name__ == "__main__":
+    bt = BinaryTree()
+    bt.creat([1,5,6,3,2,8,19,45,32])
+    bt.bfs(bt.root)
+    bt.show()

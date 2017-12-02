@@ -1,5 +1,7 @@
 # coding:utf-8
 
+# 请参考94_binary*.py and 144_binary*.py and 145_binary*.py
+
 class Node(object):
     def __init__(self, data=None, left=None, right=None):
         self.data = data

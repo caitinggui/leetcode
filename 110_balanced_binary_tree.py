@@ -58,6 +58,7 @@ class Solution(object):
             return 0
         left = self.helper(root.left)
         right = self.helper(root.right)
+        # 除去if，helper和计算树最大高度的算法一模一样
         if abs(left - right) > 1:
             self.is_balanced = False
         return max(left, right) + 1

@@ -2,7 +2,7 @@
 
 # 请参考94_binary*.py and 144_binary*.py and 145_binary*.py
 
-class Node(object):
+class TreeNode(object):
     def __init__(self, data=None, left=None, right=None):
         self.data = data
         self.left = left
@@ -10,7 +10,7 @@ class Node(object):
 
 class BinaryTree(object):
     def __init__(self):
-        self.root = Node()
+        self.root = TreeNode()
     def creat(self, datalist):
         for data in datalist:
             self.insert(data)
@@ -19,17 +19,17 @@ class BinaryTree(object):
         if node is None:
             node = self.root
         if self.root.data is None:
-            self.root = Node(data)
+            self.root = TreeNode(data)
         elif data < node.data:
             if node.left is not None:
                 self.insert(data, node.left)
             else:
-                node.left = Node(data)
+                node.left = TreeNode(data)
         else:
             if node.right is not None:
                 self.insert(data, node.right)
             else:
-                node.right = Node(data)
+                node.right = TreeNode(data)
         return self.root
 
     def preorder(self, node):
@@ -72,6 +72,45 @@ class BinaryTree(object):
                 tree_stack.append(node_next.left)
             if node_next.right:
                 tree_stack.append(node_next.right)
+
+
+def createTree(datas):
+    """按照Leecode的格式创建树
+    [5, 4, 8, 11, None, 13, 4, 7, 2, None, None, None, None, None, 1]
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \      \
+        7    2      1
+    总的思想是，把已经初始化的节点加入nodes，然后一个个弹出，绑定子节点，
+    此时，子节点也应继续加入nodes中. try是为了防止超出datas长度
+    """
+    root = TreeNode(datas[0])
+    nodes = [root]
+    datas_index = 1
+    while nodes:
+        node = nodes.pop(0)
+        if not node:
+            # 一个node对应两个子节点，如果node为空，说明接下来的子节点也可以舍弃
+            datas_index += 2
+            continue
+        try:
+            if datas[datas_index]:
+                node.left = TreeNode(datas[datas_index])
+            nodes.append(node.left)
+            datas_index += 1
+        except IndexError:
+            pass
+        try:
+            if datas[datas_index]:
+                node.right = TreeNode(datas[datas_index])
+            nodes.append(node.right)
+            datas_index += 1
+        except IndexError:
+            pass
+    return root
 
 
 if __name__ == "__main__":

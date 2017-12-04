@@ -81,7 +81,9 @@ class Solution(object):
         return 0 in result
 
     def hasPathSum2(self, root, sum):
-        """正确的解法，但是效率太慢"""
+        """正确的解法，但是效率太慢
+        对递归的一些理解:递归的理解
+        递归每一层有自己的栈，用来保存自己的值，每一层互不影响，除非要赋值，return也只是返回自己这层的变量，如果不赋值也是影响不了其他的层"""
         def helper(root, target):
             target += root.val
             if not root.left and not root.right:

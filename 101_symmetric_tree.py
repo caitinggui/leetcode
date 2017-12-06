@@ -32,13 +32,13 @@ class TreeNode(object):
         self.right = None
 
 class Solution(object):
-    def isSymmetric(self, root):
+    def isSymmetric2(self, root):
         """
         :type root: TreeNode
         :rtype: bool
         """
         if not root:
-            return False
+            return True
         stack = [(root, 0)]
         level_size = 1
         while stack:
@@ -67,6 +67,33 @@ class Solution(object):
                     else:
                         return False
         return True
+
+    def isSymmetric(self, root):
+        if not root:
+            return True
+        stack = [root, root]
+        while stack:
+            left = stack.pop(0)
+            right = stack.pop(0)
+            if not left and not right:
+                continue
+            elif (not left or not right) or (left.val != right.val):
+                return False
+            stack += [left.left, right.right, left.right, right.left]
+        return True
+
+    def isSymmetric3(self, root):
+        def isMirror(a, b):
+            if not a and not b:
+                return True
+            elif not a or not b:
+                return False
+            else:
+                return a.val == b.val and isMirror(a.left, b.right) and isMirror(a.right, b.left)
+
+        if not root:
+            return True
+        return isMirror(root.left, root.right)
 
 
 s = Solution()

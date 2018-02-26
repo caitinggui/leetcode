@@ -75,7 +75,7 @@ class Solution(object):
             self.result[n] = self.helper4(n - 1) + self.helper4(n - 2)
         return self.result[n]
 
-    def climbStairs(self, n):
+    def climbStairs5(self, n):
         if n == 1:
             return 1
         if n == 2:
@@ -87,12 +87,19 @@ class Solution(object):
             f[i] = f[i - 1] + f[i - 2]
         return f[n - 1]
 
+    def climbStairs(self, n):
+        a, b = 1, 2
+        # 前两阶已知，所以从第3阶开始算: 0,1,2
+        for _ in range(2, n):
+            a, b = b, a + b
+        return b
+
 
 s = Solution()
 print(s.climbStairs(2), 2)
 print(s.climbStairs(3), 3)
-print(s.climbStairs(4))
-print(s.climbStairs(35))
+print(s.climbStairs(4), 5)
+print(s.climbStairs(35), 14930352)
 
 """
 3个台阶时，如果最后一步为1个台阶，那么方法数为: 2个台阶时的总数，如果最后一步为2个台阶，那么方法数为: 1个台阶时的总数，总方法数: 2个台阶的总数 + 1个台阶的总数

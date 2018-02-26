@@ -88,14 +88,15 @@ class Solution(object):
         return f[n - 1]
 
     def climbStairs(self, n):
-        a, b = 1, 2
-        # 前两阶已知，所以从第3阶开始算: 0,1,2
-        for _ in range(2, n):
-            a, b = b, a + b
-        return b
+        current, next = 1, 2
+        # 确保n=1时结果正确
+        for _ in range(1, n):
+            current, next = next, current + next
+        return current
 
 
 s = Solution()
+print(s.climbStairs(1), 1)
 print(s.climbStairs(2), 2)
 print(s.climbStairs(3), 3)
 print(s.climbStairs(4), 5)

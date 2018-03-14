@@ -62,6 +62,7 @@ class Solution(object):
             return l2
         if not l2:
             return l1
+        # 第一个节点可以废弃，这样省的初始化处理
         curr = head = ListNode(-1)
         while (l1 and l2):
             if l1.val <= l2.val:

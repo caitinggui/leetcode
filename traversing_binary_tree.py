@@ -43,6 +43,18 @@ def preOrder2(root):
             stack.append((node.left, 0))
 
 
+def preOrder3(root):
+    """另一种的先跟序非递归遍历方法，因为不用重复跟节点，所以会比中根序、后根序更简单"""
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        if not node:
+            continue
+        print(node.val)
+        stack.append(node.right)
+        stack.append(node.left)
+
+
 def inOrder(root):
     """中根序遍历，先左后中再右"""
     if not root:
@@ -113,9 +125,11 @@ t1.right.right = TreeNode(7)
 t1.right.right.left = TreeNode(9)
 t1.right.right.right = TreeNode(10)
 
-# preOrder(t1)
-# print([1, 2, 4, 5, 8, 3, 6, 7, 9, 10])
-# preOrder2(t1)
+preOrder(t1)
+print([1, 2, 4, 5, 8, 3, 6, 7, 9, 10])
+preOrder2(t1)
+print
+preOrder3(t1)
 
 # inOrder(t1)
 # print([4, 2, 8, 5, 1, 6, 3, 9, 7, 10])
@@ -125,4 +139,4 @@ t1.right.right.right = TreeNode(10)
 # print([4, 8, 5, 2, 6, 9, 10, 7, 3, 1])
 # posOrder2(t1)
 
-levelOrder(t1)
+# levelOrder(t1)

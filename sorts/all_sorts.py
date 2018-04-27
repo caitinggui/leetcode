@@ -3,10 +3,12 @@
  * Author        : caitinggui
  * Email         : caitinggui@qq.com
  * Created time  : 2018-04-25 18:11
- * Description   : 所有基本的排序算法
+ * Description   : 基本的排序算法
+八大排序算法: 插入排序，希尔排序，选择排序，冒泡排序，快速排序，归并排序，堆排序，基数排序
 '''
 import random
 import time
+import math
 
 
 def insertSort(nums):
@@ -130,32 +132,125 @@ def quickSort(nums):
     _quickSort(nums, 0, len(nums) - 1)
 
 
+def _merge(left, right):
+    """合并"""
+    l_pos, r_pos = 0, 0
+    result = []
+    while l_pos < len(left) and r_pos < len(right):
+        if left[l_pos] < right[r_pos]:
+            result.append(left[l_pos])
+            l_pos += 1
+        else:
+            result.append(right[r_pos])
+            r_pos += 1
+    result += left[l_pos:]
+    result += right[r_pos:]
+    return result
+
+
+def mergeSort(nums):
+    """归并排序
+    如果列表的长度是0或1，那么它已经有序。否则：
+    未排序的部分平均划分为两个子序列。
+    每个子序列，递归使用归并排序。
+    合并两个子列表，使之整体有序。
+    """
+    if len(nums) <= 1:
+        return nums
+    mid = len(nums) / 2
+    left = mergeSort(nums[:mid])
+    right = mergeSort(nums[mid:])
+    return _merge(left, right)
+
+
 def heapSort(nums):
-    """堆排序"""
-    pass
+    """堆排序
+    它是选择排序的一种。可以利用数组的特点快速定位指定索引的元素。堆分为大根堆和小根堆，是完全二叉树。大根堆的要求是
+    每个节点的值都不大于其父节点的值，即A[PARENT[i]] >= A[i]。在数组的非降序排序中，需要使用的就是大根堆，因为根据
+    大根堆的要求可知，最大的值一定在堆顶"""
+    def siftDown(start, end):
+        """最大堆调整"""
+        root = start
+        while True:
+            child = 2 * root + 1
+            if child > end:
+                break
+            if child + 1 <= end and nums[child] < nums[child + 1]:
+                child += 1
+            if nums[root] < nums[child]:
+                nums[root], nums[child] = nums[child], nums[root]
+                root = child
+            else:
+                break
+
+    # 创建最大堆
+    for start in xrange((len(nums) - 2) // 2, -1, -1):
+        siftDown(start, len(nums) - 1)
+
+    # 堆排序
+    for end in xrange(len(nums) - 1, 0, -1):
+        nums[0], nums[end] = nums[end], nums[0]
+        siftDown(0, end - 1)
+    return nums
 
 
-times = 20    # 测试次数
-length = 800    # 要排序的数组长度
-funcs = [insertSort, shellSort, selectionSort, bubbleSort, bubbleSortImprove, quickSort]
+def radixSort(nums, radix=10):
+    """基数排序(按数字的位数来处理，没有区分是否负数，所以需要处理一下负数)
+    属于“分配式排序”（distribution sort），又称“桶子法”（bucket sort）或bin sort，顾名思义，它是透过键值的部份资讯，
+    将要排序的元素分配至某些“桶”中，藉以达到排序的作用，基数排序法是属于稳定性的排序，其时间复杂度为O (nlog(r)m)，
+    其中r为所采取的基数，而m为堆数，在某些时候，基数排序法的效率高于其它的稳定性排序法。
+
+    nums为整数列表，radix为基数, 这里只能适用于正整数,以后再研究
+    还有个bug：会把nums清空
+    """
+    K = int(math.ceil(math.log(max(nums), radix)))
+    bucket = [[] for _ in range(radix)]
+    for num in range(1, K + 1):
+        for j in nums:
+            bucket[j / (radix**(num - 1)) % (radix**num)].append(j)
+        del nums[:]
+        for z in bucket:
+            nums += z
+            del z[:]
+    return nums
+
+
+times = 10    # 测试次数
+length = 900    # 要排序的数组长度
+# 侵入式的函数，会修改原数组信息
+funcs_invaded = [insertSort, shellSort, selectionSort, bubbleSort, bubbleSortImprove, quickSort, heapSort]
+# 非侵入式函数，不修改原数组信息
+funcs_not_invaded = [mergeSort, sorted]
+
 # 准备数组
 all_nums = []
 for i in range(times):
-    # 列表长度为length，数值从-100到100
-    nums_org = [random.randint(-100, 100) for _ in range(length)]
+    # 列表长度为length，数值从-length到length
+    nums_org = [random.randint(-length, length) for _ in range(length)]
     tmp_nums = nums_org[:]
     all_nums.append((nums_org, sorted(tmp_nums)))
 
-for func in funcs:
+for func in funcs_invaded:
     time_start = time.time()
     for nums, answer in all_nums:
         tmp_nums = nums[:]  # 因为排序会改变数组内的顺序，所以要先复制出来
-        func(tmp_nums)
+        tmp_nums_merge = func(tmp_nums)
         try:
             assert(tmp_nums == answer)
         except Exception:
             print("%s result error: %s\n expect: %s" % (func.func_name, nums, answer))
-    print(func.func_name + " cost %0.4f" % (time.time() - time_start))
+    print(func.func_name, " cost %0.4f" % (time.time() - time_start))
+
+
+for func in funcs_not_invaded:
+    time_start = time.time()
+    for nums, answer in all_nums:
+        tmp_nums = func(nums)
+        try:
+            assert(tmp_nums == answer)
+        except Exception:
+            print("%s result error: %s\n expect: %s" % (func.func_name, nums, answer))
+    print(func, " cost %0.4f" % (time.time() - time_start))
 
 
 def insertSortError(nums):

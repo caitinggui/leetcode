@@ -1,4 +1,5 @@
-#coding:utf-8
+# coding:utf-8
+
 
 class Node(object):
 
@@ -13,7 +14,7 @@ class LinkList(object):
         if data:
             if type(data) in [tuple, list]:
                 self.head = Node(data[0])
-                if len(data) > 0 :
+                if len(data) > 0:
                     p = self.head
                     for i in data[1:]:
                         p.next = Node(i)
@@ -24,7 +25,7 @@ class LinkList(object):
             self.head = None
 
     def append(self, data):
-        p = self.go_index(self.get_length()-1)
+        p = self.go_index(self.get_length() - 1)
         p.next = Node(data)
 
     def clear(self):
@@ -50,10 +51,11 @@ class LinkList(object):
             p.next = self.go_index(index + 1)
 
     def del_node(self, node):
-        # 这里只是改变的传进来的变量的值，并没有删除节点, 归根结底node不是可变变量，函数内赋值node只会使函数内的node变为新
-        # 变量，但赋值node.data等内部数据，不会改变node的引用(id(node)不变)，也就是说修改了整个LinkList
-        # node = node.next
-
+        """
+        这里只是改变的传进来的变量的值，并没有删除节点, 归根结底node不是可变变量，函数内赋值node只会使函数内的node变为新
+        变量，但赋值node.data等内部数据，不会改变node的引用(id(node)不变)，也就是说修改了整个LinkList
+        node = node.next
+        """
         node.data = node.next.data
         node.next = node.next.next
 
@@ -94,21 +96,21 @@ class LinkList(object):
     def reverse(self):
         inext = self.head
         old = None
-        x = head
         while inext:
-            x = inext
-            inext = x.next
-            x.next = old
-            old = x
-        self.head = x
+            now = inext
+            inext = now.next
+            now.next = old
+            old = now
+        self.head = now
+        return self.head
         ''' to return Node
         inext = self.head
         old = None
         while inext:
-            x = inext
-            inext = x.next
-            x.next = old
-            old = x
+            now = inext
+            inext = now.next
+            now.next = old
+            old = now
         return old
         '''
 
@@ -119,3 +121,14 @@ class LinkList(object):
         while p:
             print(str(p.data))
             p = p.next
+
+
+linklist = LinkList([1, 2, 3, 4, 5, 6, 7])
+print("---show---")
+linklist.show()
+print(linklist.reverse().data)
+print("---reverse---")
+linklist.show()
+print("---delete index 2---")
+linklist.delete(2)
+linklist.show()
